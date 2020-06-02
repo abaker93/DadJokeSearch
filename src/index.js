@@ -46,7 +46,7 @@ class App extends React.Component {
 
 	renderJokes() {
 		return (
-			<ul>
+			<ul className="jokes-list">
 				{this.state.jokes.map(item => (
 					<li key={item.id}>{item.joke}</li>
 				))}
@@ -56,7 +56,13 @@ class App extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<div className="App">
+				<img
+					className="logo"
+					src="/google-dad-jokes-logo.png"
+					alt="logo"
+				/>
+
 				<SearchForm
 					onFormSubmit={this.searchJokes}
 					onSearchValueChange={this.onSearchChange}
