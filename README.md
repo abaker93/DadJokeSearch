@@ -1,2 +1,0 @@
-# DadJokeSearch
-Created with CodeSandbox
