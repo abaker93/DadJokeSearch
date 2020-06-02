@@ -1,7 +1,8 @@
 import React from "react";
 
 const SearchForm = props => (
-  <form onSubmit={props.onFormSubmit}>
+  return (
+    <form onSubmit={props.onFormSubmit}>
     <input
       type="text"
       placeholder="Enter search term..."
@@ -13,6 +14,7 @@ const SearchForm = props => (
       I'm Feeling Funny
     </button>
   </form>
+  )
 );
 
 export default SearchForm;
