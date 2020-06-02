@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import SearchForm from "./SearchForm";
 import "./styles.css";
 
 class App extends React.Component {
@@ -9,35 +10,34 @@ class App extends React.Component {
     this.state = {
       searchTerm: "",
       jokes: [],
-      isFetchingJoke: false
+      isFetchingJokes: false
     };
 
-    this.onTellJoke = this.onTellJoke.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
   }
 
-  searchJokes() {
-    this.setState({ isFetchingJoke: true });
-    fetch(`https://icanhazdadjoke.com/search?term=${this.state.searchTerm}`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json"
+  searchJokes(limit = 20) {
+    this.setState({ isFetchingJokes: true });
+    fetch(
+      `https://icanhazdadjoke.com/search?term=${
+        this.state.searchTerm
+      }&limit=${limit}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json"
+        }
       }
-    })
+    )
       .then(response => response.json())
       .then(json => {
         const jokes = json.results;
-        console.log("jokes", jokes);
         this.setState({
           jokes,
-          isFetchingJoke: false
+          isFetchingJokes: false
         });
       });
-  }
-
-  onTellJoke() {
-    this.searchJokes();
   }
 
   onSearchChange(event) {
@@ -49,26 +49,30 @@ class App extends React.Component {
     this.searchJokes();
   }
 
+  renderJokes() {
+    return (
+      <ul>
+        {this.state.jokes.map(item => (
+          <li key={item.id}>{item.joke}</li>
+        ))}
+      </ul>
+    );
+  }
+
   render() {
     return (
       <div>
-        <form onSubmit={this.onSearchSubmit}>
-          <input
-            type="text"
-            placeholder="Enter search term..."
-            onChange={this.onSearchChange}
-          />
-          <button>Search</button>
+        <SearchForm
+          onFormSubmit={this.onSearchSubmit}
+          onSearchValueChange={this.onSearchChange}
+          isSearching={this.state.isFetchingJokes}
+          onSingleSearchClick={() => this.searchJokes(1)}
+        />
 
-          <button
-            onClick={this.onTellJoke}
-            disabled={this.state.isFetchingJoke}
-          >
-            Tell me a joke
-          </button>
-        </form>
+        {this.state.isFetchingJokes
+          ? "searching for jokes..."
+          : this.renderJokes()}
 
-        <p>{this.state.jokes.toString()}</p>
         <p>search term: {this.state.searchTerm}</p>
       </div>
     );
